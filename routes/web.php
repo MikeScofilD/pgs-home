@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StepikController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -24,4 +25,7 @@ Route::get('/test', function(){
     dd($arts);
     return $arts;
 });
+
+Route::get('/stepik', [StepikController::class, 'index']);
+Route::get('/stepik/simple-sql', [StepikController::class, 'simpleSql']);
 
