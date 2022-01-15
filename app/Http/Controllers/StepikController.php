@@ -13,33 +13,79 @@ class StepikController extends Controller
 
     public function simpleSql()
     {
+        //1.1 Простые SQL запросы
         //Получите всю информацию о товарах из таблицы products.
         //Получите название (name) и цену (price) всех товаров из таблицы products.
         $products = DB::table('products')->get();
-        // foreach($products as $product){
-        //     echo "Name:".$product->name." Count:".$product->count." Price:".$product->price.'<br/>';
-        // }
+
         //Выберите из таблицы products все записи, в которых цена (price) меньше 3000.
         $products = DB::table('products')->where('price', '<', 3000)->get();
-        // foreach($products as $product){
-        //     echo "Name:".$product->name." Count:".$product->count." Price:".$product->price.'<br/>';
-        // }
+
         //Выберите из таблицы products имена (name) и цены (price) всех товаров, стоимостью от 10 000 и выше.
         $products = DB::table('products')->where('price', '>=', 10000)->get();
-        // foreach($products as $product){
-        //     echo "Name:".$product->name." Count:".$product->count." Price:".$product->price.'<br/>';
-        // }
+
         //Получите из таблицы products имена (name) товаров, которые закончились.
         $products = DB::table('products')->where('count', '=', 0)->get();
+
+        //Выберите из таблицы products название (name) и цены (price) товаров, стоимостью до 4000 включительно.
+        $products = DB::table('products')->where('price', '<=', 4000)->get();
         // foreach($products as $product){
         //     echo "Name:".$product->name." Count:".$product->count." Price:".$product->price.'<br/>';
         // }
-        //Выберите из таблицы products название (name) и цены (price) товаров, стоимостью до 4000 включительно.
-        $products = DB::table('products')->where('price', '<=', 4000)->get();
-        foreach($products as $product){
-            echo "Name:".$product->name." Count:".$product->count." Price:".$product->price.'<br/>';
-        }
-        // dump($products);
+
+        //1.2 Простые SQL запросы
+        //Выберите из таблицы orders все заказы кроме отмененных. У отмененных заказов status равен "cancelled".
+        $orders = DB::table('orders')->where('status','!=','cancelled')->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status."<br/>";
+        // }
+        //Выберите из таблицы orders все заказы содержащие более 3 товаров (products_count).
+        //Вывести нужно только номер (id) и сумму (sum) заказа.
+        $orders = DB::table('orders')->where('products_count', '>', 3)->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->id." Sum:".$order->sum."<br/>";
+        // }
+        //Выберите из таблицы orders все отмененные заказы. У отмененных заказов status равен "cancelled".
+        $orders = DB::table('orders')->where('status','=','cancelled')->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status."<br/>";
+        // }
+        //Выберите из таблицы orders все заказы, у которых сумма (sum) больше 3000 или количество товаров (products_count) от 3 и больше.
+        $orders = DB::table('orders')->where('sum','>','3000')->orWhere('products_count','>',3)->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->sum." ".$order->products_count."<br/>";
+        // }
+        //Выберите из таблицы orders все заказы, у которых сумма (sum) от 3000 и выше, а количество товаров (products_count) меньше 3.
+        $orders = DB::table('orders')->where('sum','>','3000')->orWhere('products_count','<',3)->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->sum." ".$order->products_count."<br/>";
+        // }
+        //Выберите из таблицы orders все отмененные (cancelled) и возвращенные (returned) товары.
+        //Используйте IN.
+        $orders = DB::table('orders')->whereIn('status',['cancelled','returned'])->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status."<br/>";
+        // }
+        //Выберите из таблицы orders все отмененные заказы исключая заказы стоимостью от 3000 до 10000 рублей включительно.
+        $orders = DB::table('orders')->where('status','cancelled')->whereNotIn('sum',[3000,10000])->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status." ".$order->sum."<br/>";
+        // }
+        //Выберите из таблицы orders все отмененные заказы стоимостью от 3000 до 10000 рублей включительно.
+        //Используйте BETWEEN.
+        $orders = DB::table('orders')->where('status','cancelled')->whereBetween('sum',[3000,10000])->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status." ".$order->sum."<br/>";
+        // }
+
         return "Stepik SQL";
     }
 }
