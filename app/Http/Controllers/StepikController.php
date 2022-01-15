@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class StepikController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return "Hello";
     }
 
@@ -35,7 +36,7 @@ class StepikController extends Controller
 
         //1.2 Простые SQL запросы
         //Выберите из таблицы orders все заказы кроме отмененных. У отмененных заказов status равен "cancelled".
-        $orders = DB::table('orders')->where('status','!=','cancelled')->get();
+        $orders = DB::table('orders')->where('status', '!=', 'cancelled')->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status."<br/>";
@@ -48,43 +49,87 @@ class StepikController extends Controller
         //     echo $order->id." Sum:".$order->sum."<br/>";
         // }
         //Выберите из таблицы orders все отмененные заказы. У отмененных заказов status равен "cancelled".
-        $orders = DB::table('orders')->where('status','=','cancelled')->get();
+        $orders = DB::table('orders')->where('status', '=', 'cancelled')->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status."<br/>";
         // }
         //Выберите из таблицы orders все заказы, у которых сумма (sum) больше 3000 или количество товаров (products_count) от 3 и больше.
-        $orders = DB::table('orders')->where('sum','>','3000')->orWhere('products_count','>',3)->get();
+        $orders = DB::table('orders')->where('sum', '>', '3000')->orWhere('products_count', '>', 3)->get();
         // foreach($orders as $order)
         // {
         //     echo $order->sum." ".$order->products_count."<br/>";
         // }
         //Выберите из таблицы orders все заказы, у которых сумма (sum) от 3000 и выше, а количество товаров (products_count) меньше 3.
-        $orders = DB::table('orders')->where('sum','>','3000')->orWhere('products_count','<',3)->get();
+        $orders = DB::table('orders')->where('sum', '>', '3000')->orWhere('products_count', '<', 3)->get();
         // foreach($orders as $order)
         // {
         //     echo $order->sum." ".$order->products_count."<br/>";
         // }
         //Выберите из таблицы orders все отмененные (cancelled) и возвращенные (returned) товары.
         //Используйте IN.
-        $orders = DB::table('orders')->whereIn('status',['cancelled','returned'])->get();
+        $orders = DB::table('orders')->whereIn('status', ['cancelled', 'returned'])->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status."<br/>";
         // }
         //Выберите из таблицы orders все отмененные заказы исключая заказы стоимостью от 3000 до 10000 рублей включительно.
-        $orders = DB::table('orders')->where('status','cancelled')->whereNotIn('sum',[3000,10000])->get();
+        $orders = DB::table('orders')->where('status', 'cancelled')->whereNotIn('sum', [3000, 10000])->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status." ".$order->sum."<br/>";
         // }
         //Выберите из таблицы orders все отмененные заказы стоимостью от 3000 до 10000 рублей включительно.
         //Используйте BETWEEN.
-        $orders = DB::table('orders')->where('status','cancelled')->whereBetween('sum',[3000,10000])->get();
+        $orders = DB::table('orders')->where('status', 'cancelled')->whereBetween('sum', [3000, 10000])->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status." ".$order->sum."<br/>";
         // }
+
+        //1.4 Простые SQL запросы
+        //Выберите из таблицы products все товары в порядке возрастания цены (price).
+        $products = DB::table('products')->orderBy('price', 'asc')->get();
+        //  foreach($products as $product)
+        //  {
+        //      echo $product->name." ".$product->price."<br/>";
+        //  }
+        //Выберите сотрудников из таблицы users с зарплатой (salary) меньше 30 000 рублей и отсортируйте данные по дате рождения (birthday).
+        // Сотрудников с нулевой зарплатой выбирать не нужно.
+        $employees = DB::table('users')->where('salary', '<', 30000)->where('salary', '!=', 0)->orderBy('birthday', 'asc')->get();
+        // foreach($employees as $employee){
+        //     echo $employee->first_name." ".$employee->last_name." Salary:".$employee->salary." Birthday:".$employee->birthday." Job:".$employee->job."</br>";
+        // }
+
+        //Выберите из таблицы users всех пользователей с зарплатой от 40 000 рублей и выше.
+        // Данные нужно сначала отсортировать по убыванию зарплаты (salary), а затем в алфавитном порядке по имени (first_name).
+        $employees = DB::table('users')->where('salary', '>=', 40000)->orderBy('salary', 'asc')->orderBy('first_name', 'asc')->get();
+        // foreach ($employees as $employee) {
+        //     echo $employee->first_name . " " . $employee->last_name . " Salary:" . $employee->salary . " Birthday:" . $employee->birthday . " Job:" . $employee->job . "</br>";
+        // }
+        //Выберите из таблицы products все товары в порядке убывания цены.
+        //Выведите только имена (name) и цены (price).
+        $products = DB::table('products')->orderBy('price', 'desc')->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price . "<br/>";
+        // }
+        //Выберите из таблицы products все товары стоимостью 5000 и выше в порядке убывания цены (price).
+        $products = DB::table('products')->where('price','>=',5000)->orderBy('price', 'desc')->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price . "<br/>";
+        // }
+        //Выберите из таблицы products все товары стоимостью до 3000 рублей отсортированные в алфавитном порядке.
+        // Вывести нужно только имя (name), количество (count) и цену (price).
+        $products = DB::table('products')->where('price','<=',3000)->orderBy('name', 'asc')->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price." ".$product->count . "<br/>";
+        // }
+        //Выберите из таблицы users фамилии (last_name) и имена (first_name) всех пользователей.
+        //Данные должны быть отсортированы сначала по фамилии, а затем по имени.
+        $employees = DB::table('users')->orderBy('last_name', 'asc')->orderBy('first_name', 'asc')->get();
+        foreach ($employees as $employee) {
+            echo $employee->first_name . " " . $employee->last_name . "</br>";
+        }
 
         return "Stepik SQL";
     }
