@@ -134,26 +134,26 @@ class StepikController extends Controller
         //1.5 Простые SQL запросы
         //Выберите из таблицы orders три последних заказа (по дате date) стоимостью от 3000 рублей и выше.
         //Данные отсортируйте по дате в обратном порядке.
-        $orders = DB::table('orders')->orderBy('date', 'desc')->limit(3)->where('sum','>=',3000)->get();
+        $orders = DB::table('orders')->orderBy('date', 'desc')->limit(3)->where('sum', '>=', 3000)->get();
         // foreach ($orders as $order) {
         //    echo $order->sum." ".$order->date."<br/>";
         // }
 
         //Выберите из таблицы products название и цены трех самых дешевых товаров, которые есть на складе.
-        $products = DB::table('products')->orderBy('price', 'asc')->limit(3)->where('count','>',0)->get();
+        $products = DB::table('products')->orderBy('price', 'asc')->limit(3)->where('count', '>', 0)->get();
         // foreach ($products as $product) {
         //     echo $product->name . " " . $product->price . "<br/>";
         // }
         //Сайт выводит товары по 5 штук.
         //Выберите из таблицы products товары, которые пользователи увидят на 3 странице каталога при сортировке в порядке возрастания цены (price).
-        $products = DB::table('products')->orderBy('price', 'asc')->limit(5)->offset(3)->where('count','>',0)->get();
+        $products = DB::table('products')->orderBy('price', 'asc')->limit(5)->offset(3)->where('count', '>', 0)->get();
         // foreach ($products as $product) {
         //     echo $product->name . " " . $product->price . "<br/>";
         // }
         //Выберите из таблицы orders 5 самых дорогих заказов за всё время.
         //Данные нужно отсортировать в порядке убывания цены.
         //Отмененные заказы не учитывайте.
-        $orders = DB::table('orders')->orderBy('sum', 'desc')->limit(5)->where('status','!=' ,'cancelled')->get();
+        $orders = DB::table('orders')->orderBy('sum', 'desc')->limit(5)->where('status', '!=', 'cancelled')->get();
         // foreach($orders as $order)
         // {
         //     echo $order->status." ".$order->sum."<br/>";
@@ -162,10 +162,40 @@ class StepikController extends Controller
         //В таблице products 17 записей. Сайт выводит название (name) и цену (price) товаров в алфавитном порядке, по 6 записей на страницу.
         //Напишите SQL запрос для получения списка товаров для формирования последней страницы каталога.
         //Товары, которых нет на складе, выводить не надо (таких товаров 3).
-        $products = DB::table('products')->orderBy('name', 'asc')->orderBy('price', 'asc')->limit(6)->offset(6)->where('count','>',0)->get();
-        foreach ($products as $product) {
-            echo $product->name . " " . $product->price . "<br/>";
-        }
+        $products = DB::table('products')->orderBy('name', 'asc')->orderBy('price', 'asc')->limit(6)->offset(6)->where('count', '>', 0)->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price . "<br/>";
+        // }
+
+        //2.1 Добавление, изменение, удаление
+        //Добавьте в таблицу orders данные о новом заказе стоимостью 3000 рублей. В заказе 3 товара (products).
+        // $orders = DB::table('orders')->insert([
+        //     'id' => 11,
+        //     'products_count' => 3,
+        //     'sum' => 3000,
+        // ]);
+        //Добавьте в таблицу products новый товар — «Xbox», стоимостью 30000 рублей в количестве (count) трех штук.
+        // $products = DB::table('products')->insert([
+        //     'id' => 18,
+        //     'name' => 'Xbox',
+        //     'count' => 3,
+        //     'price' => 30000,
+        // ]);
+        //Добавьте в таблицу products новый товар — «iMac 21», стоимостью 100100 рублей.
+        //Товар пока не завезли на склад.
+        // $orders = DB::table('products')->insert([
+        //     'id' => 19,
+        //     'name' => 'iMac 21',
+        //     'count' => 0,
+        //     'price' => 100100,
+        // ]);
+        //Добавьте в таблицу users нового пользователя Антона Пепеляева с датой рождения 12 июля 1992 года
+        // $orders = DB::table('users')->insert([
+        //     'id' => 9,
+        //     'first_name' => 'Антона',
+        //     '_name' => 'Пепеляева',
+        //     'birthday' => '1992.12.07',
+        // ]);
 
         return "Stepik SQL";
     }
