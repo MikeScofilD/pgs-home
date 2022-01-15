@@ -114,21 +114,57 @@ class StepikController extends Controller
         //     echo $product->name . " " . $product->price . "<br/>";
         // }
         //Выберите из таблицы products все товары стоимостью 5000 и выше в порядке убывания цены (price).
-        $products = DB::table('products')->where('price','>=',5000)->orderBy('price', 'desc')->get();
+        $products = DB::table('products')->where('price', '>=', 5000)->orderBy('price', 'desc')->get();
         // foreach ($products as $product) {
         //     echo $product->name . " " . $product->price . "<br/>";
         // }
         //Выберите из таблицы products все товары стоимостью до 3000 рублей отсортированные в алфавитном порядке.
         // Вывести нужно только имя (name), количество (count) и цену (price).
-        $products = DB::table('products')->where('price','<=',3000)->orderBy('name', 'asc')->get();
+        $products = DB::table('products')->where('price', '<=', 3000)->orderBy('name', 'asc')->get();
         // foreach ($products as $product) {
         //     echo $product->name . " " . $product->price." ".$product->count . "<br/>";
         // }
         //Выберите из таблицы users фамилии (last_name) и имена (first_name) всех пользователей.
         //Данные должны быть отсортированы сначала по фамилии, а затем по имени.
         $employees = DB::table('users')->orderBy('last_name', 'asc')->orderBy('first_name', 'asc')->get();
-        foreach ($employees as $employee) {
-            echo $employee->first_name . " " . $employee->last_name . "</br>";
+        // foreach ($employees as $employee) {
+        //     echo $employee->first_name . " " . $employee->last_name . "</br>";
+        // }
+
+        //1.5 Простые SQL запросы
+        //Выберите из таблицы orders три последних заказа (по дате date) стоимостью от 3000 рублей и выше.
+        //Данные отсортируйте по дате в обратном порядке.
+        $orders = DB::table('orders')->orderBy('date', 'desc')->limit(3)->where('sum','>=',3000)->get();
+        // foreach ($orders as $order) {
+        //    echo $order->sum." ".$order->date."<br/>";
+        // }
+
+        //Выберите из таблицы products название и цены трех самых дешевых товаров, которые есть на складе.
+        $products = DB::table('products')->orderBy('price', 'asc')->limit(3)->where('count','>',0)->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price . "<br/>";
+        // }
+        //Сайт выводит товары по 5 штук.
+        //Выберите из таблицы products товары, которые пользователи увидят на 3 странице каталога при сортировке в порядке возрастания цены (price).
+        $products = DB::table('products')->orderBy('price', 'asc')->limit(5)->offset(3)->where('count','>',0)->get();
+        // foreach ($products as $product) {
+        //     echo $product->name . " " . $product->price . "<br/>";
+        // }
+        //Выберите из таблицы orders 5 самых дорогих заказов за всё время.
+        //Данные нужно отсортировать в порядке убывания цены.
+        //Отмененные заказы не учитывайте.
+        $orders = DB::table('orders')->orderBy('sum', 'desc')->limit(5)->where('status','!=' ,'cancelled')->get();
+        // foreach($orders as $order)
+        // {
+        //     echo $order->status." ".$order->sum."<br/>";
+        // }
+
+        //В таблице products 17 записей. Сайт выводит название (name) и цену (price) товаров в алфавитном порядке, по 6 записей на страницу.
+        //Напишите SQL запрос для получения списка товаров для формирования последней страницы каталога.
+        //Товары, которых нет на складе, выводить не надо (таких товаров 3).
+        $products = DB::table('products')->orderBy('name', 'asc')->orderBy('price', 'asc')->limit(6)->offset(6)->where('count','>',0)->get();
+        foreach ($products as $product) {
+            echo $product->name . " " . $product->price . "<br/>";
         }
 
         return "Stepik SQL";
